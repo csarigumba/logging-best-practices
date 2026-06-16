@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: logging-best-practices
+
+# practice 2: expose /actuator/loggers (unrestricted access lets you POST a new
+# level at runtime, no redeploy). practice 12: expose /actuator/metrics.
+#
+# SECURITY (demo only): `access: unrestricted` lets ANY caller change log levels.
+# In production, do NOT do this — instead gate the management endpoints behind
+# Spring Security (admin role) and/or bind them to a private interface:
+#   management.server.address: 127.0.0.1
+#   management.server.port: <separate-port>
+# and drop `loggers` from the exposure list unless runtime tuning is required.
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,loggers
+  endpoint:
+    loggers:
+      access: unrestricted
+
+logging:
+  sample-rate: 0.2          # practice 5 (consumed by Sampler)
+  level:
+    com.example.logging: INFO
+    canonical: INFO
